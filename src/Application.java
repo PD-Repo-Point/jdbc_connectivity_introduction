@@ -7,25 +7,33 @@ public class Application {
         // 1. Register and load the Driver
         Class.forName("com.mysql.cj.jdbc.Driver");
 
+
         // 2. Build the connection with DriverManager.getConnection
         Connection connection = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/employee",
                 "root",
                 "12345");
 
-        // 3. Create a statement
-        Statement statement = connection.createStatement();
+
+        // 3. b) Create a prepared statement - PREPARED STATEMENT
+        String query = "insert into employeesalary value(?,?,?)";
+        PreparedStatement preparedStatement =
+                connection.prepareStatement(query);  //-> object of the statement & pass the query
+        preparedStatement.setInt(1, 2004);
+        preparedStatement.setString(2, "Developer");
+        preparedStatement.setInt(3, 60000);
+
+
+        // 4. Execute the query and fetch the number of rows affected
+        int num = preparedStatement.executeUpdate();
+        System.out.println("No. of rows affected " + num);
+
 
         // 4. Execute the query and fetch the result set
         ResultSet resultSet = statement.executeQuery("select * from employeesalary");
 
-        // 5. Traverse through the resultset
-        while(resultSet.next()){
-            System.out.println(resultSet.getInt(1)+" "
-                    + resultSet.getString(2)+" "
-                    + resultSet.getInt(3));
-        }
-        // 6. Close the connection
+        
+        // 5. Close the connection
         connection.close();
     }
 }
