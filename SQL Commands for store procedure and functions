@@ -1,0 +1,48 @@
+USE Employee;
+
+/*
+	STORED PROCEDURES
+*/
+
+
+DELIMITER &&  
+CREATE PROCEDURE get_num_of_empl (OUT var1 INT)  
+BEGIN  
+    SELECT COUNT(EmployeeID) AS Total_Employee INTO var1 FROM employeesalary;    
+END &&  
+DELIMITER ;
+
+CALL get_num_of_empl(@Num);
+
+SELECT(@Num);
+
+
+DELIMITER &&  
+CREATE PROCEDURE get_first_name(IN eno INT, OUT fname varchar(20))  
+BEGIN  
+    SELECT FirstName INTO fname FROM employeedemographics where EmployeeID=eno;    
+END &&  
+DELIMITER ;
+
+CALL get_first_name(1001,@NAME);
+
+SELECT(@NAME);
+
+
+
+/*
+	FUNCTIONS
+*/
+
+DELIMITER $$
+CREATE FUNCTION get_avg() 
+RETURNS DECIMAL
+READS SQL DATA
+DETERMINISTIC
+BEGIN  
+	DECLARE average DECIMAL;
+	SELECT AVG(Salary) INTO average FROM employeesalary ; 
+RETURN (average);
+END $$ 
+
+SELECT get_avg() AS AVERAGE; 
