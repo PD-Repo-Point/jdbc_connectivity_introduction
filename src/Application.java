@@ -4,6 +4,24 @@ public class Application {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
 
+        /*
+         * SQL - Commands
+         * DDL -> Create, Drop, Truncate, Alter, Rename
+         * DML -> Insert, Update, Delete
+         * DCL -> Grant, Revoke
+         * TCL -> Commit, Rollback, Savepoint
+         * --> ACID properties
+         *
+         * DQL -> Select
+         * */
+
+        /*                               ----> Compilation (Tokenization, Parsing-creates a parse tree, Optimization)
+         *                                       |
+         * Java Application  ----> DB ---        |
+         *                                       |
+         *                               <----- Execution
+         * */
+
         // 1. Register and load the Driver
         Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -13,8 +31,8 @@ public class Application {
                 "root",
                 "12345");
 
-        // 3. Create a statement
-        Statement statement = connection.createStatement();
+        // 3. a) Create a statement - STATEMENT
+        Statement statement = connection.createStatement(); //-> receives object of Statement
 
         // 4. Execute the query and fetch the result set
         ResultSet resultSet = statement.executeQuery("select * from employeesalary");
