@@ -1,31 +1,52 @@
 import java.sql.*;
 
 public class Application {
-
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
 
-        // 1. Register and load the Driver
+        // Register and load the Driver
         Class.forName("com.mysql.cj.jdbc.Driver");
 
-        // 2. Build the connection with DriverManager.getConnection
+        // Build the connection with DriverManager.getConnection
         Connection connection = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/employee",
-                "root",
-                "12345");
+                                "jdbc:mysql://localhost:3306/employee",
+                                "root",
+                                "12345");
 
-        // 3. Create a statement
+        // Create a statement
         Statement statement = connection.createStatement();
+        connection.setAutoCommit(false);
 
-        // 4. Execute the query and fetch the result set
-        ResultSet resultSet = statement.executeQuery("select * from employeesalary");
+        // Create SQL statement
+        String SQL =    "INSERT INTO EmployeeDemographics " +
+                        "(EmployeeID, FirstName, LastName, Age, Gender) " +
+                        "VALUES(2003, 'Zarina', 'Ali', 30, 'Female')";
 
-        // 5. Traverse through the resultset
-        while(resultSet.next()){
-            System.out.println(resultSet.getInt(1)+" "
-                    + resultSet.getString(2)+" "
-                    + resultSet.getInt(3));
-        }
-        // 6. Close the connection
+        // Add above SQL statement to the batch.
+        statement.addBatch(SQL);
+
+        // Create one more SQL statement
+        SQL =   "INSERT INTO EmployeeDemographics " +
+                "(EmployeeID, FirstName, LastName, Age, Gender) " +
+                "VALUES(2004, 'Raja', 'Das', 32, 'Male')";
+        // Add above SQL statement to the batch.
+        statement.addBatch(SQL);
+
+        // Create one more SQL statement
+        SQL =   "UPDATE EmployeeDemographics " +
+                "SET Age = 35 " +
+                "WHERE EmployeeID = 1002";
+        // Add above SQL statement to the batch.
+        statement.addBatch(SQL);
+
+        // Create an int[] to hold the returned values
+        int[] count = statement.executeBatch();
+        for( int c : count)
+            System.out.println(c);
+
+        // Explicitly commit statements to apply changes
+        connection.commit();
+
+        // Close the connection
         connection.close();
     }
 }
